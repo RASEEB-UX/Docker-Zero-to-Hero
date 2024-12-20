@@ -1,18 +1,22 @@
-FROM ubuntu
 
+
+FROM python:3.9-slim
+
+# Upgrade pip to the latest version
+RUN pip install --no-cache-dir --upgrade pip
+
+# Set the working directory
 WORKDIR /app
 
+# Copy the requirements file and install dependencies
 COPY requirements.txt /app
-COPY devops /app
+RUN pip install --no-cache-dir -r requirements.txt
 
-RUN apt-get update && \
-    apt-get install -y python3 python3-pip && \
-    pip install -r requirements.txt && \
-    cd devops
+# Copy the application files
+COPY devops /app/devops
 
-ENTRYPOINT ["python3"]
-CMD ["manage.py", "runserver", "0.0.0.0:8000"]
+# Expose the application port
+EXPOSE 8000
 
-
-
-
+# Run the application
+CMD ["python3", "/app/devops/manage.py", "runserver", "0.0.0.0:8000"]
