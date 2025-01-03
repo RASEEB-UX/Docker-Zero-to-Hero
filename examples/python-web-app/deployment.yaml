@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: python-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: python-app
+  template:
+    metadata:
+      labels:
+        app: python-app
+    spec:
+      containers:
+        - name: python-app
+          image: raseebriyazkhan/docker-zero-to-hero:latest
+          ports:
+            - containerPort: 8000
+          volumeMounts:
+            - name: static-storage
+              mountPath: /app/staticfiles  # Mounting PVC to the STATIC_ROOT path
+      volumes:
+        - name: static-storage
+          persistentVolumeClaim:
+            claimName: local-pvc  # Referencing the PVC for persistent storage
